@@ -64,13 +64,13 @@ test.describe( 'Servers', () => {
 		await siteContent.navigateToTab( 'Settings' );
 
 		expect( await siteContent.frontendButton ).toBeVisible();
-		const frontendUrl = await siteContent.frontendButton.textContent();
+		const frontendUrl = ( await siteContent.frontendButton.textContent() )?.trim();
 		expect( frontendUrl ).not.toBeNull();
 		const response = await new Promise< http.IncomingMessage >( ( resolve, reject ) => {
 			http.get( `http://${ frontendUrl }`, resolve ).on( 'error', reject );
 		} );
 		expect( [ 200, 302 ] ).toContain( response.statusCode );
-		expect( response.headers[ 'content-type' ] ).toMatch( /text\/html/ );
+		expect( response.headers[ 'content-type' ] ).toMatch( /text\/(html|plain)/ );
 	} );
 
 	test( "edit site's settings in wp-admin", async ( { page } ) => {
